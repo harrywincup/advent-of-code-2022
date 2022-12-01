@@ -2,16 +2,14 @@ module Day1.Main where
 
 import Prelude
 
-import Debug (spy, traceM)
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 import Data.String as String
-import Data.String.Common (null)
 import Data.Array as Array
-import Data.Array.NonEmpty (NonEmptyArray, toArray)
-import Data.Maybe (Maybe(..), isJust, isNothing, fromMaybe)
+import Data.Array.NonEmpty (toArray)
+import Data.Maybe (Maybe(..), isJust, fromMaybe)
 import Data.Int as Int
 import Data.Foldable (sum)
 
