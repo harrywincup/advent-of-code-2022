@@ -14,18 +14,18 @@ import Data.Tuple (Tuple(..))
 --
 
 runA :: Effect Unit
-runA = 
-    buildTurns
-    <#> map calculateScoreForTurnV1
-    <#> sum
-    >>= (show >>> log)
+runA = run calculateScoreForTurnV1
 
 runB :: Effect Unit
-runB =
+runB = run calculateScoreForTurnV2
+
+run :: (Array String -> Int) -> Effect Unit
+run calculationFn =
     buildTurns
-    <#> map calculateScoreForTurnV2
-    <#> sum
-    >>= (show >>> log)
+        <#> map calculationFn
+        <#> sum
+        <#> show
+        >>= log
 
 --
 
