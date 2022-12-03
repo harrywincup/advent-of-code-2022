@@ -49,8 +49,9 @@ isConsecutiveNumber :: Maybe Int -> Maybe Int -> Boolean
 isConsecutiveNumber a b = isJust a && isJust b
 
 isElfInventory :: Array (Maybe Int) -> Boolean
-isElfInventory [Nothing] = false
-isElfInventory _ = true
+isElfInventory = case _ of 
+    [Nothing] -> false
+    _ -> true
 
 countCalories :: Array (Maybe Int) -> Int
 countCalories = Array.foldl (\acc n -> acc + (fromMaybe 0 n)) 0
