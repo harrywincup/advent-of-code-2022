@@ -2,7 +2,6 @@ module Day3.Main where
 
 import Prelude
 
-import Debug (spy)
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
@@ -11,8 +10,7 @@ import Data.String as String
 import Data.String.CodeUnits (toCharArray, singleton)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Foldable (sum)
-import Data.Tuple (Tuple(..))
-import Data.Array ((:), filter, intersect, nub, head, foldl, drop, take, uncons)
+import Data.Array ((:), filter, intersect, nub, foldl, drop, take, uncons)
 
 --
 
