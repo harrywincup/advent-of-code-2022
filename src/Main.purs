@@ -6,7 +6,8 @@ import Effect (Effect)
 
 import Day1.Main as Day1
 import Day2.Main as Day2
+import Day3.Main as Day3
 
 main :: Effect Unit
 main = 
-  Day2.runB
+  Day3.runB
