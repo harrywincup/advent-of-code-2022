@@ -43,12 +43,11 @@ data Shape
 
 derive instance eqShape :: Eq Shape
 instance ordShape :: Ord Shape where
-    compare a b = 
-        case [a, b] of 
-            [Rock, Scissors] -> GT
-            [Paper, Rock] -> GT
-            [Scissors, Paper] -> GT
-            _ -> LT
+    compare = case _, _ of 
+        Rock, Scissors -> GT
+        Paper, Rock -> GT
+        Scissors, Paper -> GT
+        _, _ -> LT
 
 data Outcome 
     = Win
@@ -59,7 +58,7 @@ calculateScoreForTurnV1 :: Array String -> Int
 calculateScoreForTurnV1 codes = 
     case codes of 
         [opponent, player] ->
-           calculateScoreForTurn (getShapeForCode opponent) (getShapeForCode player)
+           calculateScoreForTurn (getShapeForCode(opponent)) (getShapeForCode(player))
 
         _ -> 0
 
@@ -84,8 +83,8 @@ calculateScoreForTurn opponent player =
 
 
 getShapeForCode :: String -> Maybe Shape
-getShapeForCode code =
-    case code of
+getShapeForCode c =
+    case c of
         "A" -> Just Rock
         "X" -> Just Rock
         "B" -> Just Paper
@@ -110,18 +109,20 @@ determineOutcome opponent player
     | player > opponent = Just Win
     | otherwise = Nothing
 
+getShapeThatBeats :: Maybe Shape -> Maybe Shape 
+getShapeThatBeats = case _ of 
+    Nothing -> Nothing
+    Just Rock -> Just Paper
+    Just Paper -> Just Scissors
+    Just Scissors -> Just Rock
+
 pickShapeToForceOutcome :: Maybe Shape -> Maybe Outcome -> Maybe Shape
 pickShapeToForceOutcome opponentShape desiredOutcome =
-    case Tuple opponentShape desiredOutcome of 
-        Tuple _ (Just Draw) -> opponentShape
-        Tuple (Just Rock) (Just Lose) -> Just Scissors
-        Tuple (Just Paper) (Just Lose) -> Just Rock
-        Tuple (Just Scissors) (Just Lose) -> Just Paper
-        Tuple (Just Rock) (Just Win) -> Just Paper
-        Tuple (Just Paper) (Just Win) -> Just Scissors
-        Tuple (Just Scissors) (Just Win) -> Just Rock
-        _ -> Nothing
-
+    case desiredOutcome of 
+         Nothing -> Nothing
+         Just Win -> getShapeThatBeats opponentShape
+         Just Draw -> opponentShape
+         Just Lose -> (getShapeThatBeats >>> getShapeThatBeats) opponentShape
 
 getScoreForOutcome :: Maybe Outcome -> Int
 getScoreForOutcome o =
