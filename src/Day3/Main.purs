@@ -25,7 +25,7 @@ runA =
 runB :: Effect Unit
 runB = 
     loadRucksackContents
-    <#> assignToGroups
+    <#> assignToGroupsOf 3
     <#> map findBadgePriorityForGroup
     <#> sum
     >>= (show >>> log)
@@ -75,10 +75,11 @@ findPriority c =
         # fromMaybe 0
 
 
-assignToGroups :: Array String -> Array (Array String)
-assignToGroups = case _ of 
-    [] -> []
-    xs -> take 3 xs : assignToGroups (drop 3 xs)
+assignToGroupsOf :: Int -> Array String -> Array (Array String)
+assignToGroupsOf n items = 
+    case items of 
+        [] -> []
+        xs -> take n xs : assignToGroupsOf n (drop n xs)
 
 findBadgePriorityForGroup :: Array String -> Int
 findBadgePriorityForGroup group = 
