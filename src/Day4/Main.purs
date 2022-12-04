@@ -6,9 +6,9 @@ import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
-import Data.String as String
-import Data.Int as Int
-import Data.Array (mapMaybe, filter, length)
+import Data.String as S
+import Data.Int as I
+import Data.Array as A
 
 --
 
@@ -21,18 +21,18 @@ runB = run assignmentsContainOverlappingRanges
 run :: (Array (Array Int) -> Boolean) -> Effect Unit
 run filterFn =
     readTextFile UTF8 "./src/Day4/input.txt"   
-    <#> String.split (String.Pattern "\n")
+    <#> S.split (S.Pattern "\n")
     <#> (map (splitPair >>> map parseRange))
-    <#> filter filterFn
-    <#> length
+    <#> A.filter filterFn
+    <#> A.length
     >>= (show >>> log)
 --
 
 splitPair :: String -> Array String
-splitPair = String.split (String.Pattern ",")
+splitPair = S.split (S.Pattern ",")
 
 parseRange :: String -> Array Int
-parseRange = String.split (String.Pattern "-") >>> mapMaybe Int.fromString
+parseRange = S.split (S.Pattern "-") >>> A.mapMaybe I.fromString
 
 assignmentsContainNestedRange :: Array (Array Int) -> Boolean
 assignmentsContainNestedRange as = 
