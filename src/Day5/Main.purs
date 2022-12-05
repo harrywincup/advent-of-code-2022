@@ -17,12 +17,18 @@ import Data.Maybe (Maybe(..), fromMaybe)
 --
 
 runA :: Effect Unit
-runA = 
+runA = run CM9000
+
+runB :: Effect Unit
+runB = run CM9001
+
+run :: CraneModel -> Effect Unit
+run craneModel = 
     readTextFile UTF8 "./src/Day5/input.txt"
     <#> S.split (S.Pattern "\n")
     <#> A.dropEnd 1
-    <#> modelData CM9001
-    <#> runCrane CM9001
+    <#> modelData craneModel
+    <#> runCrane craneModel
     >>= (show >>> log)
 
 --
