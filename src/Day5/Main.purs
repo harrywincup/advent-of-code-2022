@@ -99,7 +99,7 @@ parseInstruction craneModel line =
                          CM9000 -> A.replicate c $ Just $ MoveInstruction 1 (s - 1) (d - 1)
                          CM9001 -> A.singleton $ Just $ MoveInstruction c (s - 1) (d - 1)
 
-                _ -> A.fromFoldable Nothing
+                _ -> A.singleton Nothing
 
      in
      instruction
