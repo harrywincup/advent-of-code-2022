@@ -35,14 +35,14 @@ parseRange :: String -> Array Int
 parseRange = S.split (S.Pattern "-") >>> A.mapMaybe I.fromString
 
 assignmentsContainNestedRange :: Array (Array Int) -> Boolean
-assignmentsContainNestedRange as = 
-    case as of 
-         [[a1,a2], [b1,b2]] -> a1 >= b1 && a2 <= b2 || b1 >= a1 && b2 <= a2
-         _ -> false
+assignmentsContainNestedRange = 
+    case _ of 
+        [[a1,a2], [b1,b2]] -> a1 >= b1 && a2 <= b2 || b1 >= a1 && b2 <= a2
+        _ -> false
 
 assignmentsContainOverlappingRanges :: Array (Array Int) -> Boolean
-assignmentsContainOverlappingRanges as = 
-    case as of 
+assignmentsContainOverlappingRanges = 
+    case _ of 
          [[a1,a2], [b1,b2]] -> a1 <= b2 && b1 <= a2
          _ -> false
     
