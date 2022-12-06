@@ -11,7 +11,7 @@ import Data.Array as A
 
 --
 
-run :: Int -> Effect Unit
+run :: MarkerLength -> Effect Unit
 run markerLength = 
     readTextFile UTF8 "./src/Day6/input.txt"
     <#> SCU.toCharArray
