@@ -16,14 +16,18 @@ to generate this file without the comments in this block.
   , "console"
   , "debug"
   , "effect"
+  , "either"
   , "foldable-traversable"
   , "integers"
+  , "lists"
   , "maybe"
   , "node-buffer"
   , "node-fs"
+  , "parsing"
   , "prelude"
   , "st"
   , "strings"
+  , "tree"
   , "tuples"
   ]
 , packages = ./packages.dhall

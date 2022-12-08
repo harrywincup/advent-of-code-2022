@@ -103,3 +103,15 @@ let upstream =
         sha256:792255bbd8e2141468d967325f3e78246cb7e500bf3ab6d76d5b22dffbb09d49
 
 in  upstream
+  with tree =
+    { dependencies = 
+        [ "console"
+        , "free"
+        , "lists"
+        , "prelude"
+        ]
+    , repo =
+       "https://github.com/dmbfm/purescript-tree"
+    , version =
+        "v1.3.2"
+    }
