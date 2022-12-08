@@ -2,7 +2,6 @@ module Day8.Main where
 
 import Prelude
 
-import Debug (spy)
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
@@ -12,7 +11,6 @@ import Data.String.CodeUnits as SCU
 import Data.Array as A
 import Data.Maybe as M
 import Data.Int as Int
-import Data.Foldable (sum)
 
 --
 
