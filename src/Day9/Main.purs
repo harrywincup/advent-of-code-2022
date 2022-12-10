@@ -2,7 +2,6 @@ module Day9.Main where
 
 import Prelude
 
-import Debug (spy)
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
@@ -17,31 +16,36 @@ import Data.Map as Map
 
 --
 
-runA :: Effect Unit
-runA = 
+run :: Int -> Effect Unit
+run ropeLength = 
     readTextFile UTF8 "./src/Day9/input.txt"
     <#> S.split (S.Pattern "\n")
     <#> A.dropEnd 1
-    <#> A.foldl moveRope { hx: 0, hy: 0, tx: 0, ty: 0, visits: Map.singleton "0::0" 1 }
-    <#> _.visits >>> Map.size
+    <#> A.foldl moveRope (A.replicate ropeLength { x: 0, y: 0, visits: Map.singleton "0::0" 1 })
+    <#> A.head
+    <#> map (_.visits >>> Map.size)
     >>= (show >>> log)
+
+runA :: Effect Unit
+runA = run 2
+
+runB :: Effect Unit
+runB = run 10
 
 --
 
-type State =
-    { hx :: Int
-    , hy :: Int
-    , tx :: Int
-    , ty :: Int
+
+type Rope = Array Knot
+type Knot = 
+    { x :: Int
+    , y :: Int
     , visits :: Map.Map String Int
     }
 
---type Visits = Array (Map.Map String Int)
-
 type Delta = { dx :: Int, dy :: Int }
 
-moveRope :: State -> String -> State
-moveRope state m = do
+moveRope :: Rope -> String -> Rope
+moveRope rope m = do
     let 
         parts = S.split (S.Pattern " ") m
         direction = A.index parts 0 
@@ -60,26 +64,37 @@ moveRope state m = do
     -- TODO(harry): Find a way to map over slices of an array
     -- of knots so that we can reuse the exact same code for each pair
     -- and then take the tail at the end
-    Fn.applyN (move delta) steps state
+    --Fn.applyN (move delta) steps state
+    Fn.applyN (moveSection (A.length rope - 1) delta) steps rope
 
-move :: Delta -> State -> State
-move d st = do
+moveSection :: Int -> Delta -> Rope -> Rope
+moveSection knotIndex delta rope =
+    case knotIndex of 
+         i | i < 0 -> rope -- reached last knot
+           | i == (A.length rope - 1) -> do
+                let newHead = (A.modifyAt (knotIndex) (moveHead delta) >>> M.fromMaybe rope) rope
+                moveSection (knotIndex - 1) delta newHead
+                    
+           | otherwise -> do
+                let lead = A.index rope (knotIndex + 1)
+                let newRope = case lead of 
+                        M.Nothing -> rope
+                        M.Just l -> A.modifyAt knotIndex (moveChaser l) rope # M.fromMaybe rope
+
+                moveSection (knotIndex - 1) delta newRope
+
+moveHead :: Delta -> Knot -> Knot
+moveHead delta head =
+    head { x = head.x + delta.dx, y = head.y + delta.dy }
+
+moveChaser :: Knot -> Knot -> Knot
+moveChaser lead chaser = do
    let 
-       headX = st.hx + d.dx
-       headY = st.hy + d.dy
-       distX = headX - st.tx
-       distY = headY - st.ty
-       absX = Ord.abs distX
-       absY = Ord.abs distY
-       shouldMoveTail = absX > 1 || absY > 1
-       tailX = if shouldMoveTail && distX /= 0 then st.tx + (Ord.signum distX) else st.tx
-       tailY = if shouldMoveTail && distY /= 0 then st.ty + (Ord.signum distY) else st.ty
-       visits = if shouldMoveTail then Map.insert (show tailX <> "::" <> show tailY) 1 st.visits else st.visits
+       distX = lead.x - chaser.x
+       distY = lead.y - chaser.y
+       shouldMoveChaser = (Ord.abs distX) > 1 || (Ord.abs distY) > 1
+       chaserX = if shouldMoveChaser && distX /= 0 then chaser.x + (Ord.signum distX) else chaser.x
+       chaserY = if shouldMoveChaser && distY /= 0 then chaser.y + (Ord.signum distY) else chaser.y
+       chaserVisits = if shouldMoveChaser then Map.insert (show chaserX <> "::" <> show chaserY) 1 chaser.visits else chaser.visits
 
-   st { hx = headX, hy = headY, tx = tailX, ty = tailY, visits = visits }
-
-
-
-
-
-
+   chaser { x = chaserX, y = chaserY, visits = chaserVisits }
