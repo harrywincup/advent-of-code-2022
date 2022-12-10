@@ -2,7 +2,6 @@ module Day10.Main where
 
 import Prelude
 
-import Debug (spy)
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
@@ -10,11 +9,8 @@ import Node.FS.Sync (readTextFile)
 import Data.String as S
 import Data.Array as A
 import Data.Maybe as M
-import Data.Function as Fn
 import Data.Int as I
 import Data.Ord as Ord
-import Data.Map as Map
-import Data.Tuple as T
 import Data.Foldable (sum)
 
 --
