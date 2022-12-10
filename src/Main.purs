@@ -12,8 +12,9 @@ import Effect (Effect)
 --import Day6.Main as Day6
 --import Day7.Main as Day7
 --import Day8.Main as Day8
-import Day9.Main as Day9
+--import Day9.Main as Day9
+import Day10.Main as Day10
 
 main :: Effect Unit
 main = 
-  Day9.runA
+  Day10.runB
