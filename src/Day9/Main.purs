@@ -66,12 +66,12 @@ moveRope rope m = do
 moveSection :: Int -> Delta -> Rope -> Rope
 moveSection knotIndex delta rope =
     case knotIndex of 
-         i | i < 0 -> rope -- reached last knot
-           | i == (A.length rope - 1) -> do
+         i | i < 0 -> rope -- no more rope
+           | i == (A.length rope - 1) -> do -- move head knot
                 let newHead = (A.modifyAt (knotIndex) (moveHead delta) >>> M.fromMaybe rope) rope
                 moveSection (knotIndex - 1) delta newHead
                     
-           | otherwise -> do
+           | otherwise -> do -- move non-head knot
                 let lead = A.index rope (knotIndex + 1)
                 let newRope = case lead of 
                         M.Nothing -> rope
