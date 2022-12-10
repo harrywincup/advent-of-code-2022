@@ -51,7 +51,6 @@ type State =
     , visual :: Array String
     }
 
-type Cycles = Int
 type SignalStrength = Int
 
 data Instruction
