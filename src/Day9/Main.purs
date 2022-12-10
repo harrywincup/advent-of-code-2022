@@ -61,10 +61,6 @@ moveRope rope m = do
                      M.Just "R" -> { dx: 1, dy: 0}
                      _          -> { dx: 0, dy: 0}
 
-    -- TODO(harry): Find a way to map over slices of an array
-    -- of knots so that we can reuse the exact same code for each pair
-    -- and then take the tail at the end
-    --Fn.applyN (move delta) steps state
     Fn.applyN (moveSection (A.length rope - 1) delta) steps rope
 
 moveSection :: Int -> Delta -> Rope -> Rope
