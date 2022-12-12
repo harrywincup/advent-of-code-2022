@@ -115,3 +115,22 @@ in  upstream
     , version =
         "v1.3.2"
     }
+  with pqueue =
+    { dependencies =
+      [ "lists"
+      , "newtype"
+      , "ordered-collections"
+      ]
+    , repo = "https://github.com/nullobject/purescript-pqueue"
+    , version = "v2.0.0"
+  }
+  with digraph =
+    { dependencies = 
+      [ "lists"
+      , "newtype"
+      , "ordered-collections"
+      , "pqueue"
+      ]
+    , repo = "https://github.com/nullobject/purescript-digraph"
+    , version = "v2.0.0"
+    }
