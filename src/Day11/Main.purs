@@ -2,7 +2,6 @@ module Day11.Main where
 
 import Prelude
 
-import Debug (spy)
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Encoding (Encoding(..))
@@ -92,7 +91,6 @@ performRounds rounds monkeys = do
 
 doShenanigans :: Array Monkey -> Monkey -> Array Monkey
 doShenanigans monkeys monkey = do
-    --(spy ("folding:" <> show monkey.id) $ monkey.items)
     monkeys
         # A.find (\{id} -> id == monkey.id)
         # M.fromMaybe monkey
@@ -102,9 +100,6 @@ doShenanigans monkeys monkey = do
 moveItem :: Int -> Array Monkey -> Int -> Array Monkey
 moveItem id monkeys i = do
     let
-        --_ = spy "moving item:" $ i
-        --_ = spy "monkey" $ monkey
-        --_ = spy "monkey" monkey
         maybeInspector = A.find (\m -> m.id == id) monkeys
         
         updatedMonkeys = 
@@ -124,18 +119,11 @@ moveItem id monkeys i = do
                                        # M.fromMaybe monkeys 
                                  M.Nothing -> monkeys
 
-                        --inspector = A.find (\{id} -> id == monkey.id) withReceiver # M.fromMaybe monkey
-
                         withInspector =
                             A.updateAt inspector.id (inspector { inspections = inspector.inspections + 1, items = A.drop 1 inspector.items }) withReceiver
                             # M.fromMaybe withReceiver
-                            --# spy "after updating inspector"
 
                     withInspector
-
-        --_ = spy ("pre:" <> show preWorry <> " post:" <> show postWorry <> " pass:" <> show receiverID ) $ ""
-        --_ = spy "items" $ map _.items withInspector
-
 
     updatedMonkeys
 
