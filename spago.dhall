@@ -13,8 +13,10 @@ to generate this file without the comments in this block.
 { name = "my-project"
 , dependencies =
   [ "arrays"
+  , "bifunctors"
   , "console"
   , "debug"
+  , "decimals"
   , "effect"
   , "either"
   , "filterable"
@@ -27,6 +29,7 @@ to generate this file without the comments in this block.
   , "ordered-collections"
   , "parsing"
   , "prelude"
+  , "record-extra"
   , "st"
   , "strings"
   , "tree"
