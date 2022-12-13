@@ -20,6 +20,7 @@ to generate this file without the comments in this block.
   , "digraph"
   , "effect"
   , "either"
+  , "enums"
   , "filterable"
   , "foldable-traversable"
   , "integers"
