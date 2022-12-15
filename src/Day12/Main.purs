@@ -27,10 +27,11 @@ runA =
     buildGrid
     --<#> spy "grid"
     <#> buildGraph
-    --<#> G.shortestPath "S020" "E13720"
-    <#> G.shortestPath "S00" "E52"
+    <#> G.shortestPath "S020" "E13720"
+    --<#> G.shortestPath "S00" "E52"
     <#> spy "shortest path"
     <#> map (L.length)
+    --<#> map (_ - 1 )
     >>= (show >>> log)
 
 --
@@ -47,7 +48,7 @@ type Edge = T.Tuple String Int
 
 buildGrid :: Effect (Array Tile)
 buildGrid = 
-    readTextFile UTF8 "./src/Day12/test-input.txt"
+    readTextFile UTF8 "./src/Day12/input.txt"
     <#> S.split (S.Pattern "\n")
     <#> A.dropEnd 1
     <#> A.mapWithIndex buildRow
@@ -64,27 +65,17 @@ buildTile yCoord xCoord heightChar =
      { c: (SCU.singleton heightChar) <> show xCoord <> show yCoord
      , x: xCoord
      , y: yCoord
-     --, h: getHeightForTile heightChar
      } 
-
---getHeightForTile :: Char -> Int
---getHeightForTile c = do
---    let
---        hc = case c of 
---                  'S' -> 'a'
---                  'E' -> 'z'
---                  _ -> c
---    
---    toCharCode hc
 
 buildGraph :: Array Tile -> G.Graph String Int
 buildGraph = (buildAdjacencyList >>> G.fromAdjacencyList)
 
 buildAdjacencyList :: Array Tile -> G.AdjacencyList String Int
-buildAdjacencyList ts = map (buildNode ts) ts # L.fromFoldable
+--buildAdjacencyList ts = map (buildNode ts) ts # L.fromFoldable
+buildAdjacencyList ts = A.foldl (buildNode ts) ts [] # L.fromFoldable
 
-buildNode :: Array Tile -> Tile -> Node
-buildNode tiles tile = do
+buildNode :: Array Tile -> Array Tile -> Tile -> Array Node
+buildNode checked tiles tile = do
     let 
         n = A.find (\t -> t.x == tile.x && t.y == tile.y - 1) tiles
         e = A.find (\t -> t.x == tile.x + 1 && t.y == tile.y) tiles
@@ -94,6 +85,7 @@ buildNode tiles tile = do
         neighbors = 
             A.catMaybes [n,e,s,w] 
                 # A.filter (_.c >>> isValidNeighbor tile.c)
+                # A.filter (_.c 
                 --# spy ("validNeighbors:" <> show tile.c)
 
         node = T.Tuple (tile.c) (L.fromFoldable (neighbors # map tileToEdge))
@@ -102,8 +94,6 @@ buildNode tiles tile = do
     
 position = "abcdefghijklmnopqrstuvwxyz"
 isValidNeighbor :: String -> String -> Boolean
---isValidNeighbor "S" b = isValidNeighbor "a" b
---isValidNeighbor a "E" = isValidNeighbor a "z"
 isValidNeighbor a b = do
     let
         a' = case S.take 1 a of
@@ -115,18 +105,18 @@ isValidNeighbor a b = do
                   "E" -> spy ("E:" <> b) $ "z"
                   l -> l
 
-        --diff = fromEnum b - fromEnum a
         a'' = S.indexOf (S.Pattern (a')) position # M.fromMaybe (0)
         b'' = S.indexOf (S.Pattern (b')) position # M.fromMaybe (0)
 
         diff = b'' - a''
 
-    diff == 1 || diff == 0
+    --diff == 1 || diff == 0
+    diff <= 1
 
 
 tileToEdge :: Tile -> Edge
 tileToEdge dst = do
-    --T.Tuple dst.c ((S.indexOf (S.Pattern (dst.c # S.take 1)) position) # M.fromMaybe (0))
+    -- TODO(harry): Decide if we need to weight the edges?
     T.Tuple dst.c 1
 
 
@@ -134,3 +124,5 @@ tileToEdge dst = do
 
 
     
+-- NOT 309
+-- NOT 310
